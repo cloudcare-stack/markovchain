@@ -33,8 +33,8 @@ Thus, pi is the eigenvector of the transpose of the transition matrix correspond
 
 ## Directions
 
-- [ ] All methods should be defined within a class named A1 (and therefore take as input self as an additional first parameter.  If an instruction requests two parameters, you would have self and those two.)
-- [ ] Please name your file a1.py
+- [x] All methods should be defined within a class named A1 (and therefore take as input self as an additional first parameter.  If an instruction requests two parameters, you would have self and those two.)
+- [x] Please name your file a1.py
 - [ ] Define a method generate_markov_chain that takes as input two lists of strings, a list of potential states, and a sequence of states.  You should store the list of potential states for later, to help with indexing the transition matrix in a later method.  **In this method, you should generate the transition matrix and store it as a 2d NumPy array of floats.  Store this as a variable transition_matrix for later use.  Your method should return this array.
 - [ ] Define a method generate_samples that takes as input a string representing the first state and two integers, a random seed and a length.  It should return a list of strings containing the generated sequence.  If the input length is nine (9), the generated sequence should start with the input string state and be a total of ten (10) states long. Look at a and b sublist.
 - [ ] Define a method stationary_distribution that computes and returns the stationary distribution (also called steady-state vector) as a 1d NumPy array.  The stationary distribution is defined above in the Description section.  Generate it, ensuring it is normalized, and return it.

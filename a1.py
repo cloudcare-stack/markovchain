@@ -1,3 +1,9 @@
+'''
+Author: Colin McAteer
+Assignment: Markov Chains
+Date Due: September 14
+'''
+
 import numpy as np
 import random
 
@@ -20,9 +26,12 @@ class A1:
     def generate_markov_chain(self, states, sequence):
         
         self.states = states
+        #count all states
         self.state_index = {state: i for i, state in enumerate(states)}
-        n = len(states)
-        matrix = np.zeros((n,n), dtype=float)
+        #set a variable for a length of an array of states
+        x = len(states)
+        #use NumPy library to create a new array with all elements initialized to zero.
+        matrix = np.zeros((x,x), dtype=float)
 
         # count transitions from state to another
         for i in range(len(sequence)- 1):
@@ -32,7 +41,8 @@ class A1:
                 matrix[self.state_index[curr_state], self.state_index[next_state]] += 1
 
         # normalize rows to probabilities
-        for i in range(n):
+        for i in range(x):
+            #each row calculate the sum of elements wihtin NumPy arrays
             row_sum = np.sum(matrix[i])
             if row_sum > 0:
                 matrix[i] /= row_sum
@@ -41,44 +51,8 @@ class A1:
 
         return self.transition_matrix
     
-    def generate_samples(self, first_state, seed, length):
+    def generate_samples(self, first_state, num, length):
 
-        if self.transition_matrix is None:
-            raise ValueError("Transition matrix has not been generated yet.")
-        
-        random.seed(seed)
-        sequence = [first_state]
-
-        for _ in range(length):
-            curr_state = sequence[-1]
-            if curr_state not in self.state_index:
-                raise ValueError(f"State '{curr_state}' not found in state list.")
-            row = self.transition_matrix[self.state_index[curr_state]]
-
-            r = random.random()
-            cumulative = 0.0
-            for i, p in enumerate(row):
-                cumulative += p
-                if r < cumulative:
-                    sequence.append(self.states[i])
-                    break
-
-        return sequence
-    
     def stationary_distribution(self):
 
-        if self.transition_matrix is None:
-            raise ValueError("Transition matrix has not been generated yet.")
-
-        # Eigen decomposition of transpose
-        eigvals, eigvecs = np.linalg.eig(self.transition_matrix.T)
-
-        # Find eigenvector corresponding to eigenvalue 1
-        idx = np.argmin(np.abs(eigvals - 1.0))
-        stationary = np.real(eigvecs[:, idx])
-
-        # Normalize to sum to 1
-        stationary = stationary / np.sum(stationary)
-        stationary = stationary.real  # in case of tiny imaginary parts
-
-        return stationary
+    
