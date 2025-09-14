@@ -51,8 +51,45 @@ class A1:
 
         return self.transition_matrix
     
-    def generate_samples(self, first_state, num, length):
+    def generate_samples(self, first_state, seed, length):
+
+        if self.transition_matrix is None:
+            raise ValueError("Transition matrix has not been generated yet.")
+        
+        random.seed(seed)
+        sequence = [first_state]
+
+        for _ in range(length):
+            curr_state = sequence[-1]
+            if curr_state not in self.state_index:
+                raise ValueError(f"State '{curr_state}' not found in state list.")
+            row = self.transition_matrix[self.state_index[curr_state]]
+
+            r = random.random()
+            cumulative = 0.0
+            for i, p in enumerate(row):
+                cumulative += p
+                if r < cumulative:
+                    sequence.append(self.states[i])
+                    break
+
+        return sequence
 
     def stationary_distribution(self):
 
-    
+        if self.transition_matrix is None:
+            raise ValueError("Transition matrix has not been generated yet.")
+
+        # self.transition_matrix.T refers to the transpose of a matrix stored in an instance
+        # numpy.linalg.eig function computes the eigenvalues and right eigenvectors of a square array (matrix)
+        eigvals, eigvecs = np.linalg.eig(self.transition_matrix.T)
+
+        # Find eigenvector corresponding to eigenvalue 1
+        idx = np.argmin(np.abs(eigvals - 1.0))
+        stationary = np.real(eigvecs[:, idx])
+
+        # Normalize to sum to 1
+        stationary = stationary / np.sum(stationary)
+        stationary = stationary.real  # in case of tiny imaginary parts
+
+        return stationary
